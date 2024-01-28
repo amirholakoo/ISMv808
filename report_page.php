@@ -1,5 +1,8 @@
 <!-- report_page.php -->
-
+echo "Original Date: " . $row["Date"] . "<br>"; // Debugging: Check original date
+    $jalaliDate = jdate("Y/m/d", strtotime($row["Date"])); // Convert to Jalali
+    echo "Jalali Date: " . $jalaliDate . "<br>"; // Debugging: Check Jalali date
+    
 <?php
 
 ini_set('display_errors', 1);
