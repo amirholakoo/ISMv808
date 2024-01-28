@@ -43,18 +43,66 @@ echo "<!DOCTYPE html>
 <head>
     <title>Report Page</title>
     <style>
-        table, th, td {
-            border: 1px solid black;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #444;
+        }
+
+        h2 {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 20px;
             border-collapse: collapse;
         }
-        th, td {
-            padding: 5px;
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th {
+            height: 50px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        td {
+            padding: 8px;
             text-align: left;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {background-color: #f2f2f2;}
+
+        .container {
+            width: 95%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .alert {
+            padding: 20px;
+            background-color: #ff9800;
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Report Page</h1>";
+    <div class="container">
+        <h1>Report Page</h1>
 
     // Section 1: Shipments Data
     echo "<h2>Shipments Data</h2>";
