@@ -1,3 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+        }
+        td {
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .alert {
+            padding: 10px;
+            background-color: #ff9800;
+            color: white;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Report Page</h1>
+    <!-- Your PHP script continues here... -->
+
+    <div class="alert">
+        <h2>Alerts and Notices</h2>
+        <p>Check for any low stock or other important notices here.</p>
+    </div>
+
+    <!-- Rest of your PHP script... -->
+</body>
+</html>
+
+
+
+
 <!-- report_page.php -->
 echo "Original Date: " . $row["Date"] . "<br>"; // Debugging: Check original date
     $jalaliDate = jdate("Y/m/d", strtotime($row["Date"])); // Convert to Jalali
