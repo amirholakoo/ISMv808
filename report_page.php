@@ -89,14 +89,13 @@ echo "<!DOCTYPE html>
         echo "No In-Stock Reels Available<br>";
     }
 
-    // Section 4: Recent Sales Orders
-    echo "<h2>Recent Sales Orders</h2>";
     if ($recentSalesResult->num_rows > 0) {
-        echo "<table><tr><th>Sale ID</th><th>Customer ID</th><th>Sale Amount</th><th>Date</th></tr>";
-        while ($row = $recentSalesResult->fetch_assoc()) {
-            echo "<tr><td>" . $row["SaleID"] . "</td><td>" . $row["CustomerID"] . "</td><td>" . $row["SaleAmount"] . "</td><td>" . $row["Date"] . "</td></tr>";
-        }
-        echo "</table>";
+    echo "<table><tr><th>Sale ID</th><th>Customer ID</th><th>Sale Amount</th><th>Date</th></tr>";
+    while ($row = $recentSalesResult->fetch_assoc()) {
+        $jalaliDate = jdate("Y/m/d", strtotime($row["Date"])); // Convert to Jalali
+        echo "<tr><td>" . $row["SaleID"] . "</td><td>" . $row["CustomerID"] . "</td><td>" . $row["SaleAmount"] . "</td><td>" . $jalaliDate . "</td></tr>"; // Use Jalali Date
+    }
+    echo "</table>";
     } else {
         echo "No Recent Sales Orders<br>";
     }
