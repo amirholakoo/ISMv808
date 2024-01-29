@@ -10,24 +10,23 @@ $shipmentsResult = $conn->query($shipmentsQuery);
 // Handle Form Submission
 if (isset($_POST['create_po'])) {
 
-// Extract and sanitize form inputs
-    $shipmentId = $_POST['shipment_id']; // Assuming this is the ShipmentID from the Shipments table
-    // Additional form data processing
+$shipmentId = $_POST['shipment_id'];
 
-    // Fetch TruckID from Shipments table
-    $truckQuery = "SELECT TruckID FROM Shipments WHERE ShipmentID = ?";
-    $truckStmt = $conn->prepare($truckQuery);
-    $truckStmt->bind_param("i", $shipmentId);
-    $truckStmt->execute();
-    $truckResult = $truckStmt->get_result();
-    if ($truckRow = $truckResult->fetch_assoc()) {
-        $truckId = $truckRow['TruckID'];
+    // Fetch TruckID and SupplierID from Shipments table
+    $shipmentQuery = "SELECT TruckID, SupplierID FROM Shipments WHERE ShipmentID = ?";
+    $shipmentStmt = $conn->prepare($shipmentQuery);
+    $shipmentStmt->bind_param("i", $shipmentId);
+    $shipmentStmt->execute();
+    $shipmentResult = $shipmentStmt->get_result();
+    if ($shipmentRow = $shipmentResult->fetch_assoc()) {
+        $truckId = $shipmentRow['TruckID'];
+        $supplierId = $shipmentRow['SupplierID'];
     } else {
-        echo "<p style='color:red;'>Error: Truck not found for the shipment.</p>";
+        echo "<p style='color:red;'>Error: Shipment details not found.</p>";
         $conn->close();
         exit;
     }
-    $truckStmt->close();
+    $shipmentStmt->close();
     
     $supplierID = $_POST['supplier_id'];
     $supplierName = $_POST['supplier_name']; // From the form
@@ -60,16 +59,15 @@ $weight2 = $_POST['weight2'];
     }
 
     // Insert into Purchases
-    $insertPurchaseQuery = "INSERT INTO Purchases (Date, SupplierID, TruckID, MaterialID, MaterialType, MaterialName, Unit, Quantity, Weight1, Weight2, NetWeight, ShippingCost, VAT, PricePerKG, TotalPrice, InvoiceStatus, PaymentStatus, InvoiceNumber, DocumentInfo, Comments) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insertPurchaseQuery = "INSERT INTO Purchases (Date, SupplierID, TruckID, MaterialID, MaterialType, MaterialName, Unit, Quantity, Weight1, Weight2, NetWeight, ShippingCost, VAT, PricePerKG, TotalPrice, InvoiceStatus, PaymentStatus, InvoiceNumber, DocumentInfo, Comments, ShipmentID) VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $insertPurchase = $conn->prepare($insertPurchaseQuery);
-    // Bind all necessary variables
-    $insertPurchase->bind_param("iiisssiiddidddsssss", $supplierId, $truckId, $materialId, $materialType, $materialName, $unit, $quantity, $weight1, $weight2, $netWeight, $shippingCosts, $vatDecimal, $pricePerKg, $totalPrice, $invoiceStatus, $paymentStatus, $supplierInvoice, $documentInfo, $comments);
+    $insertPurchase->bind_param("iiisssiiddidddsssssi", $supplierId, $truckId, $materialId, $materialType, $materialName, $unit, $quantity, $weight1, $weight2, $netWeight, $shippingCosts, $vatDecimal, $pricePerKg, $totalPrice, $invoiceStatus, $paymentStatus, $supplierInvoice, $documentInfo, $comments, $shipmentId);
     $insertPurchase->execute();
-    // Check for successful insertion and handle any errors
+    $purchaseId = $conn->insert_id; // Fetch the newly created Purchase ID
     if ($insertPurchase->error) {
         echo "<p style='color:red;'>Error: " . $insertPurchase->error . "</p>";
     } else {
-        echo "<p style='color:green;'>Into Purchases successfully!</p>";
+        echo "<p style='color:green;'>Purchase Order created successfully!</p>";
     }
     $insertPurchase->close();
 
