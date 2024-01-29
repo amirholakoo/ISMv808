@@ -111,6 +111,7 @@ CREATE TABLE Shipments (
     SalesID INT,
     PricePerKG DECIMAL(10,2),
     ShippingCost DECIMAL(10,2),
+    SupplierID INT,
     MaterialID INT,
     MaterialType VARCHAR(255),
     MaterialName VARCHAR(255),
