@@ -13,7 +13,22 @@ if (isset($_POST['create_po'])) {
 // Extract and sanitize form inputs
     $shipmentId = $_POST['shipment_id']; // Assuming this is the ShipmentID from the Shipments table
     // Additional form data processing
-$truckID = $_POST['truck_id'];
+
+    // Fetch TruckID from Shipments table
+    $truckQuery = "SELECT TruckID FROM Shipments WHERE ShipmentID = ?";
+    $truckStmt = $conn->prepare($truckQuery);
+    $truckStmt->bind_param("i", $shipmentId);
+    $truckStmt->execute();
+    $truckResult = $truckStmt->get_result();
+    if ($truckRow = $truckResult->fetch_assoc()) {
+        $truckId = $truckRow['TruckID'];
+    } else {
+        echo "<p style='color:red;'>Error: Truck not found for the shipment.</p>";
+        $conn->close();
+        exit;
+    }
+    $truckStmt->close();
+    
     $supplierID = $_POST['supplier_id'];
     $supplierName = $_POST['supplier_name']; // From the form
     $materialId = $_POST['material_id']; // From the form
@@ -67,11 +82,15 @@ $weight2 = $_POST['weight2'];
     $updateShipment->close();
 
     // Update Trucks
-    // Assuming truck ID is fetched from shipment details
-    $updateTruckQuery = "UPDATE Trucks SET Status = 'Free' WHERE TruckID = ?";
+    $updateTruckQuery = "UPDATE Trucks SET Status = 'Free', Location = 'Entrance' WHERE TruckID = ?";
     $updateTruck = $conn->prepare($updateTruckQuery);
     $updateTruck->bind_param("i", $truckId);
     $updateTruck->execute();
+    if ($updateTruck->error) {
+        echo "<p style='color:red;'>Error updating truck: " . $updateTruck->error . "</p>";
+    } else {
+        echo "<p style='color:green;'>Truck status updated successfully!</p>";
+    }
     $updateTruck->close();
 
     echo "<p style='color:green;'>Trucks and Shipments UPDATED successfully!</p>";
